@@ -18,7 +18,7 @@ app.use(cors());
 readdirSync("./routes").map((parameter) => app.use("/", require("./routes/" + parameter)));
 
 // Checking Server
-app.listen(8080, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Listening on Server at PORT : ${process.env.PORT}`);
   mongoose
     .connect(process.env.MONGO_URI, {
