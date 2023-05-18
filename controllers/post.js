@@ -1,44 +1,125 @@
-const Schedule = require("../models/Schedule.js");
-const User = require("../models/User.js");
+// const User = require("../models/User.js");
+const Band = require("../models/Band.js");
+const Individual = require("../models/Individual.js");
 
-exports.getSchedule = async (req, res) => {
+exports.getIndividualSchedules = async (req, res) => {
   try {
-    const schedules = await Schedule.find()
-      .sort({ date: 1, startTime: 1 })
+    const individualSchedules = await Individual.find()
+      .sort({ date: 1, time1: 1 })
       .populate({
         path: "user",
         select: "username",
       });
-    return res.status(200).json(schedules);
+    return res.status(200).json(individualSchedules);
   } catch (error) {
     console.log(error);
   }
 };
 
-exports.createSchedule = async (req, res) => {
+exports.getBandSchedules = async (req, res) => {
   try {
-    const { user, date, startTime, endTime, memo, createdAt } = req.body;
-    const schedule = await Schedule.create({
-      user,
+    const bandSchedules = await Band.find()
+      .sort({ date: 1, time1: 1 })
+      .populate({
+        path: "user",
+        select: "username",
+      });
+    return res.status(200).json(bandSchedules);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.createIndividualSchedule = async (req, res) => {
+  try {
+    const { currentUser, date, time1, time2, time3, time4, createdAt } =
+      req.body;
+    const individualSchedule = await Individual.create({
+      user: currentUser,
       date,
-      startTime,
-      endTime,
-      memo,
+      time1,
+      time2,
+      time3,
+      time4,
       createdAt,
     });
-    schedule.save();
+    await individualSchedule.save();
     return res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);
   }
 };
 
+exports.createBandSchedule = async (req, res) => {
+  try {
+    const { currentUser, bandName, date, time1, time2, createdAt } = req.body;
+    const bandSchedule = await Band.create({
+      user: currentUser,
+      bandName,
+      date,
+      time1,
+      time2,
+      createdAt,
+    });
+    await bandSchedule.save();
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
+  }
+};
+// exports.getSchedule = async (req, res) => {
+//   try {
+//     const schedules = await Schedule.find().populate({
+//       path: "user",
+//       select: "username",
+//     });
+//     const ArrayData = await Arrays.find();
+//     const responseData = {
+//       schedules: schedules,
+//       arrayData: ArrayData,
+//     };
+//     return res.status(200).json(responseData);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// exports.createSchedule = async (req, res) => {
+//   try {
+//     const {
+//       user,
+//       kozinDate,
+//       kozinTime,
+//       dantaiDate,
+//       dantaiTime,
+//       bandName,
+//       createdAt,
+//     } = req.body;
+//     const schedule = await Schedule.create({
+//       user,
+//       kozinDate,
+//       dantaiDate,
+//       bandName,
+//       createdAt,
+//     });
+//     schedule.save();
+//     const array = await Arrays.create({
+//       kozinTime,
+//       dantaiTime,
+//     });
+//     array.save();
+//     return res.status(200).json({ success: true });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 exports.deleteSchedule = async (req, res) => {
   const { id } = req.params;
-  await Schedule.findByIdAndRemove(id);
+  await Individual.findByIdAndRemove(id);
+  await Band.findByIdAndRemove(id);
   return res.status(200).json({ success: true });
 };
-
 
 // exports.ServerHome = async (req, res) => {
 //   try {

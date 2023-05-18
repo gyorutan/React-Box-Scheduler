@@ -1,8 +1,10 @@
 const express = require("express");
 const { Login, Register, ServerHome } = require("../controllers/auth.js");
 const {
-  getSchedule,
-  createSchedule,
+  createIndividualSchedule,
+  createBandSchedule,
+  getIndividualSchedules,
+  getBandSchedules,
   deleteSchedule,
 } = require("../controllers/post.js");
 const { getUserProfile } = require("../controllers/user.js");
@@ -11,8 +13,11 @@ const router = express.Router();
 // Server Home
 router.get("/", ServerHome);
 
-// Get Schedules
-router.get("/schedule", getSchedule);
+// Get Individual Schedules
+router.get("/individual", getIndividualSchedules);
+
+// Get Band Schedules
+router.get("/band", getBandSchedules);
 
 // Get UserProfile
 router.get("/user/:id", getUserProfile);
@@ -23,8 +28,11 @@ router.post("/login", Login);
 // Register
 router.post("/register", Register);
 
-// Create Schedule
-router.post("/create", createSchedule);
+// Create Individual Schedule
+router.post("/individual", createIndividualSchedule);
+
+// Create Band Schedule
+router.post("/band", createBandSchedule);
 
 // Delete Schedule
 router.delete("/delete/:id", deleteSchedule);
