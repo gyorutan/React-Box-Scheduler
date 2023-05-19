@@ -2,14 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
 
-exports.ServerHome = async (req, res) => {
-  try {
-    res.status(200).send(" Connected to Node Js PORT 5000 Successfully ");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 exports.Login = async (req, res) => {
   try {
     const { loginId, loginPw } = req.body;

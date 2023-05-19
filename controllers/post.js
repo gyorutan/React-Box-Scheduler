@@ -34,6 +34,13 @@ exports.createIndividualSchedule = async (req, res) => {
   try {
     const { currentUser, date, time1, time2, time3, time4, createdAt } =
       req.body;
+    const existingSchedule = await Individual.findOne({
+      date,
+      $or: [{ time1 }, { time2 }, { time3 }, { time4 }],
+    });
+    if (existingSchedule) {
+      return res.status(404).json({ error: "Duplicate schedule" });
+    }
     const individualSchedule = await Individual.create({
       user: currentUser,
       date,
@@ -47,12 +54,39 @@ exports.createIndividualSchedule = async (req, res) => {
     return res.status(200).json({ success: true });
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 };
+// exports.createIndividualSchedule = async (req, res) => {
+//   try {
+//     const { currentUser, date, time1, time2, time3, time4, createdAt } =
+//       req.body;
+//     const individualSchedule = await Individual.create({
+//       user: currentUser,
+//       date,
+//       time1,
+//       time2,
+//       time3,
+//       time4,
+//       createdAt,
+//     });
+//     await individualSchedule.save();
+//     return res.status(200).json({ success: true });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 exports.createBandSchedule = async (req, res) => {
   try {
     const { currentUser, bandName, date, time1, time2, createdAt } = req.body;
+    const existingSchedule = await Band.findOne({
+      date,
+      $or: [{ time1 }, { time2 }],
+    });
+    if (existingSchedule) {
+      return res.status(404).json({ error: "Duplicate schedule" });
+    }
     const bandSchedule = await Band.create({
       user: currentUser,
       bandName,

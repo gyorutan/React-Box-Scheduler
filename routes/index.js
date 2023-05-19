@@ -1,5 +1,5 @@
 const express = require("express");
-const { Login, Register, ServerHome } = require("../controllers/auth.js");
+const { Login, Register } = require("../controllers/auth.js");
 const {
   createIndividualSchedule,
   createBandSchedule,
@@ -11,7 +11,9 @@ const { getUserProfile } = require("../controllers/user.js");
 const router = express.Router();
 
 // Server Home
-router.get("/", ServerHome);
+router.get("/", async (req, res) => {
+  return res.status(200).json({ success: true, message: "Welcome to Node Js" });
+});
 
 // Get Individual Schedules
 router.get("/individual", getIndividualSchedules);
