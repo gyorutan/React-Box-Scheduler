@@ -9,13 +9,10 @@ const bandSchema = mongoose.Schema({
     type: String,
   },
   date: {
-    type: Object,
+    type: String,
   },
-  time1: {
-    type: Object,
-  },
-  time2: {
-    type: Object,
+  time: {
+    type: Array,
   },
   createdAt: {
     type: String,

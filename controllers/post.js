@@ -5,7 +5,7 @@ const Individual = require("../models/Individual.js");
 exports.getIndividualSchedules = async (req, res) => {
   try {
     const individualSchedules = await Individual.find()
-      .sort({ date: 1, time1: 1 })
+      .sort({ date: 1 })
       .populate({
         path: "user",
         select: "username",
@@ -18,12 +18,10 @@ exports.getIndividualSchedules = async (req, res) => {
 
 exports.getBandSchedules = async (req, res) => {
   try {
-    const bandSchedules = await Band.find()
-      .sort({ date: 1, time1: 1 })
-      .populate({
-        path: "user",
-        select: "username",
-      });
+    const bandSchedules = await Band.find().sort({ date: 1 }).populate({
+      path: "user",
+      select: "username",
+    });
     return res.status(200).json(bandSchedules);
   } catch (error) {
     console.log(error);
@@ -32,22 +30,26 @@ exports.getBandSchedules = async (req, res) => {
 
 exports.createIndividualSchedule = async (req, res) => {
   try {
-    const { currentUser, date, time1, time2, time3, time4, createdAt } =
-      req.body;
-    const existingSchedule = await Individual.findOne({
-      date,
-      $or: [{ time1 }, { time2 }, { time3 }, { time4 }],
+    const { currentUser, date, time, createdAt } = req.body;
+
+    console.log(time);
+
+    const modifiedTime = time.map(({ value }) => value);
+    console.log(modifiedTime);
+
+    const existingSchedules = await Individual.find({
+      date: date.value,
+      time: { $in: modifiedTime },
     });
-    if (existingSchedule) {
-      return res.status(404).json({ error: "Duplicate schedule" });
+
+    if (existingSchedules.length > 0) {
+      return res.status(400).json({ error: "error" });
     }
+
     const individualSchedule = await Individual.create({
       user: currentUser,
-      date,
-      time1,
-      time2,
-      time3,
-      time4,
+      date: date.value,
+      time: modifiedTime,
       createdAt,
     });
     await individualSchedule.save();
@@ -79,20 +81,27 @@ exports.createIndividualSchedule = async (req, res) => {
 
 exports.createBandSchedule = async (req, res) => {
   try {
-    const { currentUser, bandName, date, time1, time2, createdAt } = req.body;
-    const existingSchedule = await Band.findOne({
-      date,
-      $or: [{ time1 }, { time2 }],
+    const { currentUser, bandName, date, time, createdAt } = req.body;
+
+    console.log(time);
+
+    const modifiedTime = time.map(({ value }) => value);
+    console.log(modifiedTime);
+
+    const existingSchedules = await Band.find({
+      date: date.value,
+      time: { $in: modifiedTime },
     });
-    if (existingSchedule) {
-      return res.status(404).json({ error: "Duplicate schedule" });
+
+    if (existingSchedules.length > 0) {
+      return res.status(400).json({ error: "error" });
     }
+
     const bandSchedule = await Band.create({
       user: currentUser,
       bandName,
-      date,
-      time1,
-      time2,
+      date: date,
+      time: modifiedTime,
       createdAt,
     });
     await bandSchedule.save();

@@ -6,19 +6,10 @@ const individualSchema = mongoose.Schema({
     ref: "User",
   },
   date: {
-    type: Object,
+    type: String,
   },
-  time1: {
-    type: Object,
-  },
-  time2: {
-    type: Object,
-  },
-  time3: {
-    type: Object,
-  },
-  time4: {
-    type: Object,
+  time: {
+    type: Array,
   },
   createdAt: {
     type: String,
