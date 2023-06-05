@@ -82,6 +82,7 @@ exports.createIndividualSchedule = async (req, res) => {
 exports.createBandSchedule = async (req, res) => {
   try {
     const { currentUser, bandName, date, time, createdAt } = req.body;
+    console.log(date)
 
     console.log(time);
 
@@ -100,7 +101,7 @@ exports.createBandSchedule = async (req, res) => {
     const bandSchedule = await Band.create({
       user: currentUser,
       bandName,
-      date: date,
+      date: date.value,
       time: modifiedTime,
       createdAt,
     });
